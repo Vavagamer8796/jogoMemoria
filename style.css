@@ -1,7 +1,7 @@
 :root {
   --bg: #E6E6FA; /* fundo lilás suave */
-  --card-back: #7B61FF;
-  --accent: #5E35B1;
+  --card-back: #cc8cea;
+  --accent: #61237b;
   --card-front: #ffffff;
   --shadow: rgba(0, 0, 0, 0.15);
 }
@@ -68,24 +68,28 @@ button:active {
 .board {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
 }
 
 /* Cartas */
 .card {
+  position: relative;
   perspective: 1000px;
-  width: 100%;
-  aspect-ratio: 3 / 4;
+  width: 90%;
+  aspect-ratio: 1 / 1.25;
+  display: grid;
+  place-items: center; 
+  overflow: visible; 
 }
 
 .card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  width: 110%;          
+  height: 103%;
   transform-style: preserve-3d;
   transition: transform 0.4s ease;
-  border-radius: 10px;
+  border-radius: 200px;
   cursor: pointer;
+  transform: rotateY(0deg);
 }
 
 .card.flipped .card-inner {
@@ -95,7 +99,7 @@ button:active {
 .card-face {
   position: absolute;
   inset: 0;
-  border-radius: 10px;
+  border-radius: 15px;
   backface-visibility: hidden;
   display: flex;
   align-items: center;
@@ -106,7 +110,8 @@ button:active {
 }
 
 .card-back {
-  background: linear-gradient(180deg, var(--card-back), #5a3be0);
+  background: linear-gradient(180deg, #cc8cea 20%, #c48dd8);
+
   color: white;
 }
 
