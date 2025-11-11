@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo da Memória — 18 Cartas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <h1>Jogo da Memória</h1>
+      <div class="controls">
+        <button id="restart">Reiniciar</button>
+        <div class="stats">
+          Movimentos: <span id="moves">0</span> • Pares: <span id="pairs">0</span>/9
+        </div>
+      </div>
+    </header>
+
+    <section class="board" id="board">
+      <!-- As cartas serão criadas via JavaScript -->
+    </section>
+
+    <footer class="footer">Dica: encontre os pares. Boa sorte!</footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
