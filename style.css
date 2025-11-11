@@ -1,83 +1,143 @@
 :root {
-  --lilac: #E6E6FA;
-  --card-size: 80px; /* era 110px */
-  --accent: #7C4DFF;
-  --card-back: #6b5b9f;
+  --bg: #E6E6FA; /* fundo lilás suave */
+  --card-back: #7B61FF;
+  --accent: #5E35B1;
+  --card-front: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
 }
 
 body {
   margin: 0;
-  font-family: "Poppins", sans-serif;
-  background: var(--lilac);
-  color: #333;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background: linear-gradient(180deg, var(--bg), #d9c7ff);
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  justify-content: center;
+  padding: 20px;
+  color: #2c1052;
 }
 
 .app {
-  text-align: center;
   width: 100%;
-  max-width: 700px;
-  padding: 10px;
+  max-width: 1100px;
 }
 
 .header {
-  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.6rem;
 }
 
 .controls {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
+  gap: 10px;
 }
 
 button {
   background: var(--accent);
-  border: none;
   color: #fff;
-  padding: 8px 16px;
+  border: none;
+  padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  box-shadow: 0 4px 10px var(--shadow);
+  transition: transform 0.1s ease;
 }
 
-button:hover {
-  background: #5f34d0;
+button:active {
+  transform: scale(0.97);
 }
 
 .board {
   display: grid;
-  grid-template-columns: repeat(6, var(--card-size));
-  gap: 8px;
-  justify-content: center;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
 }
 
+/* Cartas */
 .card {
-  width: var(--card-size);
-  height: var(--card-size);
-  background: var(--card-back);
+  perspective: 1000px;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
   border-radius: 10px;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.8rem;
-  color: transparent;
-  transition: transform 0.4s, background 0.3s, color 0.3s;
 }
 
-.card.revealed {
-  background: #fff;
-  color: #000;
+.card.flipped .card-inner {
   transform: rotateY(180deg);
 }
 
-@media (max-width: 600px) {
-  :root {
-    --card-size: 60px;
+.card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  box-shadow: 0 5px 10px var(--shadow);
+}
+
+.card-back {
+  background: linear-gradient(180deg, var(--card-back), #5a3be0);
+  color: white;
+}
+
+.card-front {
+  background: var(--card-front);
+  transform: rotateY(180deg);
+  color: var(--accent);
+}
+
+.matched .card-inner {
+  box-shadow: 0 0 0 3px rgba(94, 53, 177, 0.25) inset;
+}
+
+.footer {
+  margin-top: 16px;
+  text-align: center;
+  color: #3b2b56;
+}
+
+/* Responsivo */
+@media (min-width: 900px) {
+  .board {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.3rem;
+  }
+  button {
+    padding: 6px 10px;
   }
 }
