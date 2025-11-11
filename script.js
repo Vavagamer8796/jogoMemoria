@@ -1,124 +1,94 @@
-// script.js — Jogo da Memória (18 cartas / 9 pares)
+const emojis = ["🌸", "💜", "🌷", "🦋", "⭐", "🌼", "🍇", "🌻", "🎀"];
+let cartas = [...emojis, ...emojis];
+let primeira = null;
+let segunda = null;
+let bloqueio = false;
 
-const board = document.getElementById('board');
-const movesEl = document.getElementById('moves');
-const pairsEl = document.getElementById('pairs');
-const restartBtn = document.getElementById('restart');
+// Contadores
+let movimentos = 0;
+let paresCertos = 0;
 
-const TOTAL_PAIRS = 9;
-let symbols = [];
-let firstCard = null;
-let secondCard = null;
-let lockBoard = false;
-let moves = 0;
-let matchedPairs = 0;
-
-// Gera 9 símbolos únicos (usando emojis)
-function generateSymbols() {
-  const base = ['🍇','🍉','🍊','🍓','🍒','🥝','🍍','🥥','🍋'];
-  return base.slice(0, TOTAL_PAIRS);
+// Atualiza painel
+function atualizarPainel() {
+  document.getElementById("movimentos").textContent = movimentos;
+  document.getElementById("pares").textContent = paresCertos;
 }
 
-// Embaralha o array
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
+function embaralhar(array) {
+  return array.sort(() => Math.random() - 0.5);
 }
 
-// Cria o tabuleiro com as 18 cartas
-function createBoard() {
-  board.innerHTML = '';
-  symbols = generateSymbols();
-  const deck = shuffle([...symbols, ...symbols]); // duplica e embaralha
-
-  deck.forEach(sym => {
-    const card = document.createElement('button');
-    card.className = 'card';
-    card.dataset.symbol = sym;
-    card.innerHTML = `
-      <div class="card-inner">
-        <div class="card-face card-back">?</div>
-        <div class="card-face card-front">${sym}</div>
-      </div>
+function criarTabuleiro() {
+  const tabuleiro = document.getElementById("tabuleiro");
+  tabuleiro.innerHTML = "";
+  embaralhar(cartas).forEach(emoji => {
+    const carta = document.createElement("div");
+    carta.classList.add("carta");
+    carta.innerHTML = `
+      <div class="face verso"></div>
+      <div class="face frente">${emoji}</div>
     `;
-    card.addEventListener('click', onCardClick);
-    board.appendChild(card);
+    carta.addEventListener("click", () => virarCarta(carta, emoji));
+    tabuleiro.appendChild(carta);
   });
-
-  // reseta variáveis
-  moves = 0;
-  matchedPairs = 0;
-  firstCard = null;
-  secondCard = null;
-  lockBoard = false;
-  updateStats();
 }
 
-// Lógica ao clicar em uma carta
-function onCardClick(e) {
-  const card = e.currentTarget;
-  if (lockBoard) return;
-  if (card === firstCard) return;
-  if (card.classList.contains('matched')) return;
+function virarCarta(carta, emoji) {
+  if (bloqueio || carta.classList.contains("virada")) return;
 
-  card.classList.add('flipped');
+  carta.classList.add("virada");
 
-  if (!firstCard) {
-    firstCard = card;
-    return;
-  }
-
-  secondCard = card;
-  moves++;
-  updateStats();
-
-  checkForMatch();
-}
-
-// Verifica se formou um par
-function checkForMatch() {
-  const isMatch = firstCard.dataset.symbol === secondCard.dataset.symbol;
-
-  if (isMatch) {
-    firstCard.classList.add('matched');
-    secondCard.classList.add('matched');
-    matchedPairs++;
-
-    resetTurn();
-
-    if (matchedPairs === TOTAL_PAIRS) {
-      setTimeout(() => {
-        alert(`🎉 Parabéns! Você encontrou todos os pares em ${moves} movimentos.`);
-      }, 300);
-    }
+  if (!primeira) {
+    primeira = { carta, emoji };
   } else {
-    lockBoard = true;
+    segunda = { carta, emoji };
+    movimentos++;
+    atualizarPainel();
+    verificarPar();
+  }
+}
+
+function verificarPar() {
+  if (!primeira || !segunda) return;
+
+  bloqueio = true;
+
+  if (primeira.emoji === segunda.emoji) {
+    paresCertos++;
+    atualizarPainel();
+    primeira = null;
+    segunda = null;
+    bloqueio = false;
+    verificarVitoria();
+  } else {
     setTimeout(() => {
-      firstCard.classList.remove('flipped');
-      secondCard.classList.remove('flipped');
-      resetTurn();
+      primeira.carta.classList.remove("virada");
+      segunda.carta.classList.remove("virada");
+      primeira = null;
+      segunda = null;
+      bloqueio = false;
     }, 800);
   }
 }
 
-// Reseta a jogada
-function resetTurn() {
-  [firstCard, secondCard] = [null, null];
-  lockBoard = false;
-  updateStats();
+function verificarVitoria() {
+  if (paresCertos === emojis.length) {
+    setTimeout(() => {
+      alert(`🎉 Parabéns! Você venceu com ${movimentos} movimentos!`);
+    }, 300);
+  }
 }
 
-// Atualiza o placar
-function updateStats() {
-  movesEl.textContent = moves;
-  pairsEl.textContent = matchedPairs;
+function reiniciar() {
+  primeira = null;
+  segunda = null;
+  bloqueio = false;
+  movimentos = 0;
+  paresCertos = 0;
+  atualizarPainel();
+  cartas = [...emojis, ...emojis];
+  criarTabuleiro();
 }
 
-// Reiniciar o jogo
-restartBtn.addEventListener('click', createBoard);
-
-// Inicia o jogo ao carregar
-createBoard();
+criarTabuleiro();
+atualizarPainel();

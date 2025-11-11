@@ -1,148 +1,138 @@
 :root {
-  --bg: #E6E6FA; /* fundo lilás suave */
+  --bg: #E6E6FA;
   --card-back: #cc8cea;
-  --accent: #61237b;
   --card-front: #ffffff;
+  --accent: #9047b9;
   --shadow: rgba(0, 0, 0, 0.15);
 }
 
 * {
   box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-  background: linear-gradient(180deg, var(--bg), #d9c7ff);
+  background-color: var(--bg);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  min-height: 100vh;
   padding: 20px;
-  color: #2c1052;
 }
 
-.app {
-  width: 100%;
-  max-width: 1100px;
+h1 {
+  color: var(--accent);
+  margin-bottom: 10px;
+  text-align: center;
 }
 
-.header {
+/* Painel de pontuação */
+.painel {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 40px;
+  font-size: 1.2rem;
+  color: var(--accent);
   margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 10px;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 1.6rem;
+.painel p {
+  background: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px var(--shadow);
 }
 
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-button {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px var(--shadow);
-  transition: transform 0.1s ease;
-}
-
-button:active {
-  transform: scale(0.97);
-}
-
-.board {
+/* === GRADE DE 3 LINHAS === */
+.tabuleiro {
   display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
+  max-width: 900px;
+  width: 100%;
+  justify-items: center;
 }
 
-/* Cartas */
-.card {
+.carta {
   position: relative;
-  perspective: 1000px;
-  width: 90%;
-  aspect-ratio: 1 / 1.25;
-  display: grid;
-  place-items: center; 
-  overflow: visible; 
-}
-
-.card-inner {
-  width: 110%;          
-  height: 103%;
-  transform-style: preserve-3d;
-  transition: transform 0.4s ease;
-  border-radius: 200px;
+  width: 120px;
+  height: 160px;
   cursor: pointer;
-  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
 }
 
-.card.flipped .card-inner {
+.carta.virada {
   transform: rotateY(180deg);
 }
 
-.card-face {
+.face {
   position: absolute;
-  inset: 0;
+  width: 100%;
+  height: 100%;
   border-radius: 15px;
   backface-visibility: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  font-weight: bold;
-  box-shadow: 0 5px 10px var(--shadow);
+  box-shadow: 0 4px 10px var(--shadow);
+  font-size: 2.5rem;
 }
 
-.card-back {
-  background: linear-gradient(180deg, #cc8cea 20%, #c48dd8);
-
-  color: white;
-}
-
-.card-front {
-  background: var(--card-front);
+.frente {
+  background-color: var(--card-front);
   transform: rotateY(180deg);
-  color: var(--accent);
 }
 
-.matched .card-inner {
-  box-shadow: 0 0 0 3px rgba(94, 53, 177, 0.25) inset;
+.verso {
+  background-color: var(--card-back);
 }
 
-.footer {
-  margin-top: 16px;
-  text-align: center;
-  color: #3b2b56;
+button {
+  margin-top: 25px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--accent);
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
 }
 
 /* Responsivo */
-@media (min-width: 900px) {
-  .board {
-    grid-template-columns: repeat(6, 1fr);
+@media (max-width: 900px) {
+  .tabuleiro {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 700px;
   }
 }
 
-@media (max-width: 480px) {
-  .header h1 {
-    font-size: 1.3rem;
+@media (max-width: 600px) {
+  .tabuleiro {
+    grid-template-columns: repeat(3, 1fr);
   }
-  button {
-    padding: 6px 10px;
+
+  .carta {
+    width: 100px;
+    height: 130px;
+  }
+
+  .face {
+    font-size: 2rem;
+  }
+
+  .painel {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
 }
